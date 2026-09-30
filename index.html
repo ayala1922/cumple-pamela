@@ -1,0 +1,2153 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Archivo 20•10</title>
+
+<style>
+
+*{
+    box-sizing:border-box;
+}
+
+body{
+    margin:0;
+    font-family:Arial, sans-serif;
+    background:linear-gradient(135deg,#eafaff,#ffffff,#dff7ff);
+    color:#31515c;
+    min-height:100vh;
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    overflow-x:hidden;
+}
+
+.pantalla{
+    display:none;
+    width:100%;
+    max-width:650px;
+    padding:25px;
+    text-align:center;
+}
+
+.pantalla.activa{
+    display:block;
+}
+
+.card{
+    background:rgba(255,255,255,0.95);
+    border-radius:25px;
+    padding:35px 25px;
+    box-shadow:0 10px 35px rgba(72,170,200,0.18);
+    border:2px solid #d8f5ff;
+}
+
+h1{
+    color:#4bb8d8;
+    margin-bottom:10px;
+}
+
+h2{
+    color:#54b9d6;
+}
+
+p{
+    font-size:18px;
+    line-height:1.5;
+}
+
+button{
+    border:none;
+    background:#63c5df;
+    color:white;
+    padding:14px 24px;
+    border-radius:15px;
+    font-size:17px;
+    cursor:pointer;
+    margin-top:18px;
+    box-shadow:0 5px 12px rgba(80,180,210,0.25);
+}
+
+button:hover{
+    transform:scale(1.03);
+}
+
+button.secundario{
+    background:#9edbed;
+}
+
+.emoji-grande{
+    font-size:60px;
+    margin-bottom:10px;
+}
+
+.fecha{
+    display:flex;
+    justify-content:center;
+    gap:10px;
+    margin:25px 0;
+}
+
+.fecha input{
+    width:80px;
+    padding:14px 5px;
+    text-align:center;
+    border:2px solid #bcebf7;
+    border-radius:12px;
+    font-size:20px;
+    outline:none;
+}
+
+.fecha input.año{
+    width:120px;
+}
+
+.objetos{
+    display:grid;
+    grid-template-columns:1fr 1fr;
+    gap:15px;
+    margin-top:25px;
+}
+
+.objeto{
+    background:#effbff;
+    border:2px solid #cceff8;
+    border-radius:20px;
+    padding:25px 10px;
+    cursor:pointer;
+    font-size:19px;
+}
+
+.objeto:hover{
+    background:#def7ff;
+    transform:scale(1.02);
+}
+
+.objeto .icono{
+    font-size:45px;
+    display:block;
+    margin-bottom:10px;
+}
+
+.codigo{
+    display:flex;
+    justify-content:center;
+    gap:10px;
+    margin:25px 0;
+}
+
+.codigo input{
+    width:55px;
+    height:65px;
+    border:2px solid #bcebf7;
+    border-radius:12px;
+    text-align:center;
+    font-size:28px;
+    outline:none;
+}
+
+.mensaje-codigo{
+    background:#effbff;
+    padding:15px;
+    border-radius:15px;
+    margin:20px 0;
+}
+
+.nota{
+    background:#fffdf1;
+    border:2px solid #f1e6a8;
+    padding:25px;
+    border-radius:18px;
+    margin-top:20px;
+}
+
+.error{
+    font-size:18px;
+}
+
+.error .corazon-roto{
+    font-size:70px;
+}
+
+.laberinto{
+    display:grid;
+    grid-template-columns:repeat(15,1fr);
+    width:min(90vw,520px);
+    aspect-ratio:1;
+    margin:25px auto;
+    border:4px solid #9bdff0;
+    border-radius:10px;
+    overflow:hidden;
+}
+
+.celda{
+    display:flex;
+    justify-content:center;
+    align-items:center;
+    font-size:clamp(10px,2.5vw,22px);
+}
+
+.pared{
+    background:#76c9df;
+}
+
+.camino{
+    background:#f8fdff;
+}
+
+.controles{
+    display:grid;
+    grid-template-columns:repeat(3,60px);
+    justify-content:center;
+    gap:7px;
+    margin-top:20px;
+}
+
+.controles button{
+    margin:0;
+    padding:12px;
+    width:60px;
+    height:50px;
+}
+
+.controles button:nth-child(1){
+    grid-column:2;
+}
+
+.controles button:nth-child(2){
+    grid-column:1;
+    grid-row:2;
+}
+
+.controles button:nth-child(3){
+    grid-column:2;
+    grid-row:2;
+}
+
+.controles button:nth-child(4){
+    grid-column:3;
+    grid-row:2;
+}
+
+.respuesta-final{
+    width:90%;
+    max-width:400px;
+    padding:15px;
+    border:2px solid #bcebf7;
+    border-radius:13px;
+    font-size:18px;
+    text-align:center;
+    outline:none;
+    margin-top:20px;
+}
+
+.corazones{
+    position:fixed;
+    pointer-events:none;
+    font-size:22px;
+    animation:subir 4s linear forwards;
+}
+
+@keyframes subir{
+
+    0%{
+        transform:translateY(0);
+        opacity:1;
+    }
+
+    100%{
+        transform:translateY(-100vh);
+        opacity:0;
+    }
+
+}
+
+
+/* ===== NUESTRA HISTORIA ===== */
+
+#historia .card{
+    max-width:520px;
+}
+
+#historia h2{
+    margin-bottom:8px;
+}
+
+#historia h1{
+    margin-top:5px;
+}
+
+.timeline{
+    position:relative;
+    margin:30px auto;
+    padding-left:24px;
+    max-width:430px;
+    text-align:left;
+}
+
+.timeline::before{
+    content:"";
+    position:absolute;
+    left:6px;
+    top:5px;
+    bottom:5px;
+    width:3px;
+    background:#9bdff0;
+    border-radius:10px;
+}
+
+.evento{
+    position:relative;
+    padding:0 0 23px 24px;
+}
+
+.evento::before{
+    content:"";
+    position:absolute;
+    left:-1px;
+    top:2px;
+    width:11px;
+    height:11px;
+    background:white;
+    border:3px solid #9bdff0;
+    border-radius:50%;
+}
+
+.fecha-timeline{
+    display:block;
+    font-size:14px;
+    font-weight:bold;
+    color:#4ba9c5;
+    margin-bottom:4px;
+}
+
+.evento strong{
+    display:block;
+    font-size:16px;
+    line-height:1.4;
+}
+
+.evento.especial{
+    background:#e8faff;
+    border-radius:15px;
+    padding:13px 14px 15px 24px;
+    margin:0 0 23px -10px;
+    box-shadow:0 4px 12px rgba(0,0,0,0.08);
+}
+
+.evento.especial::before{
+    left:9px;
+    background:#9bdff0;
+}
+
+.final-historia{
+    margin-top:25px;
+    padding-top:22px;
+    border-top:1px solid #d5f3fa;
+}
+
+.final-historia p{
+    font-size:17px;
+    line-height:1.6;
+    margin:15px 0 0;
+}
+
+
+/* ===== ROMPECABEZAS ===== */
+
+#rompecabezas .card{
+    max-width:520px;
+}
+
+.puzzle{
+    width:min(90vw,420px);
+    aspect-ratio:1;
+    margin:25px auto;
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:4px;
+    padding:4px;
+    background:#9bdff0;
+    border-radius:15px;
+    box-shadow:0 8px 20px rgba(72,170,200,0.18);
+}
+
+.pieza{
+    border-radius:8px;
+    cursor:pointer;
+    background-image:url("rompecabezas.jpeg");
+    background-size:400% 400%;
+    transition:transform 0.12s ease;
+    min-width:0;
+    min-height:0;
+}
+
+.pieza:hover{
+    transform:scale(0.97);
+}
+
+.pieza.vacia{
+    background-image:none;
+    background:#eafaff;
+    cursor:default;
+}
+
+.puzzle-mensaje{
+    background:#effbff;
+    border:2px solid #cceff8;
+    border-radius:15px;
+    padding:15px;
+    margin-top:20px;
+    font-size:16px;
+}
+
+
+@media(max-width:500px){
+
+    .pantalla{
+        padding:15px;
+    }
+
+    .card{
+        padding:28px 18px;
+    }
+
+    h1{
+        font-size:27px;
+    }
+
+    h2{
+        font-size:23px;
+    }
+
+    p{
+        font-size:16px;
+    }
+
+    .fecha input{
+        width:70px;
+    }
+
+    .fecha input.año{
+        width:105px;
+    }
+
+    .objetos{
+        gap:10px;
+    }
+
+    .objeto{
+        padding:20px 5px;
+        font-size:16px;
+    }
+
+    #historia .card{
+        width:90%;
+    }
+
+    .timeline{
+        padding-left:20px;
+    }
+
+    .evento{
+        padding-left:20px;
+    }
+
+    .evento strong{
+        font-size:15px;
+    }
+
+    .evento.especial{
+        padding-left:20px;
+    }
+
+    .final-historia p{
+        font-size:16px;
+    }
+
+    .puzzle{
+        width:min(92vw,380px);
+        gap:3px;
+        padding:3px;
+    }
+
+    .pieza{
+        border-radius:6px;
+    }
+
+}
+
+</style>
+</head>
+
+
+<body>
+
+
+<!-- =========================
+     INICIO
+========================= -->
+
+<section id="inicio" class="pantalla activa">
+
+    <div class="card">
+
+        <div class="emoji-grande">🔐</div>
+
+        <h1>ARCHIVO 20•10</h1>
+
+        <h2>Misión secreta</h2>
+
+        <p>
+            Este archivo fue creado especialmente para una persona.
+        </p>
+
+        <p>
+            <strong>Nombre de la misión:</strong><br>
+            RESOLVE EL MISTERIO 🩵
+        </p>
+
+        <p>
+            Hay algo escondido acá y solamente vos podés descubrirlo.
+        </p>
+
+        <button onclick="mostrar('advertencia')">
+            Comenzar misión
+        </button>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     ADVERTENCIA
+========================= -->
+
+<section id="advertencia" class="pantalla">
+
+    <div class="card">
+
+        <div class="emoji-grande">⚠️</div>
+
+        <h1>ACCESO RESTRINGIDO</h1>
+
+        <p>
+            <strong>Antes de empezar...</strong>
+        </p>
+
+        <p>
+            Vas a tener que pasar varias pruebas.
+        </p>
+
+        <p>
+            Solamente alguien que conoce nuestra historia
+            puede llegar hasta el final.
+        </p>
+
+        <button onclick="mostrar('prueba1')">
+            Acepto el desafío
+        </button>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     PRUEBA 1
+========================= -->
+
+<section id="prueba1" class="pantalla">
+
+    <div class="card">
+
+        <div class="emoji-grande">📅</div>
+
+        <h2>PRUEBA 01</h2>
+
+        <h1>La primera puerta</h1>
+
+        <p>
+            ¿Cuándo nos conocimos?
+        </p>
+
+        <div class="fecha">
+
+            <input
+                id="dia1"
+                maxlength="2"
+                placeholder="DD"
+                oninput="siguienteCampo(this,'mes1')"
+            >
+
+            <input
+                id="mes1"
+                maxlength="2"
+                placeholder="MM"
+                oninput="siguienteCampo(this,'año1')"
+            >
+
+            <input
+                id="año1"
+                class="año"
+                maxlength="4"
+                placeholder="AAAA"
+            >
+
+        </div>
+
+        <button onclick="comprobar1()">
+            Comprobar
+        </button>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     PRUEBA 2
+========================= -->
+
+<section id="prueba2" class="pantalla">
+
+    <div class="card">
+
+        <div class="emoji-grande">📅</div>
+
+        <h2>PRUEBA 02</h2>
+
+        <h1>La segunda puerta</h1>
+
+        <p>
+            ¿Cuándo empezo nuestra historia?
+        </p>
+
+        <div class="fecha">
+
+            <input
+                id="dia2"
+                maxlength="2"
+                placeholder="DD"
+                oninput="siguienteCampo(this,'mes2')"
+            >
+
+            <input
+                id="mes2"
+                maxlength="2"
+                placeholder="MM"
+                oninput="siguienteCampo(this,'año2')"
+            >
+
+            <input
+                id="año2"
+                class="año"
+                maxlength="4"
+                placeholder="AAAA"
+            >
+
+        </div>
+
+        <button onclick="comprobar2()">
+            Comprobar
+        </button>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     PRUEBA 3
+========================= -->
+
+<section id="prueba3" class="pantalla">
+
+    <div class="card">
+
+        <div class="emoji-grande">📅</div>
+
+        <h2>PRUEBA 03</h2>
+
+        <h1>La última fecha</h1>
+
+        <p>
+            ¿Cuándo nos hicimos oficialmente novias?
+        </p>
+
+        <div class="fecha">
+
+            <input
+                id="dia3"
+                maxlength="2"
+                placeholder="DD"
+                oninput="siguienteCampo(this,'mes3')"
+            >
+
+            <input
+                id="mes3"
+                maxlength="2"
+                placeholder="MM"
+                oninput="siguienteCampo(this,'año3')"
+            >
+
+            <input
+                id="año3"
+                class="año"
+                maxlength="4"
+                placeholder="AAAA"
+            >
+
+        </div>
+
+        <button onclick="comprobar3()">
+            Comprobar
+        </button>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     ERROR
+========================= -->
+
+<section id="error" class="pantalla">
+
+    <div class="card error">
+
+        <div class="corazon-roto">💔</div>
+
+        <h1>Corazón roto</h1>
+
+        <p>
+            Parece que esa respuesta no era la correcta.
+        </p>
+
+        <button onclick="volverPregunta()">
+            Volver a intentar
+        </button>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     SALA 04
+========================= -->
+
+<section id="sala" class="pantalla">
+
+    <div class="card">
+
+        <h2>🏠 SALA 04</h2>
+
+        <h1>Hay algo escondido...</h1>
+
+        <p>
+            Llegaste a una habitación.
+        </p>
+
+        <p>
+            Hay varios objetos. Uno de ellos puede ayudarte a seguir.
+        </p>
+
+        <div class="objetos">
+
+            <div class="objeto" onclick="objeto1()">
+
+                <span class="icono">🔒</span>
+
+                Candado
+
+            </div>
+
+
+            <div class="objeto" onclick="objeto2()">
+
+                <span class="icono">📄</span>
+
+                Papel
+
+            </div>
+
+
+            <div class="objeto" onclick="objeto3()">
+
+                <span class="icono">🎁</span>
+
+                Caja
+
+            </div>
+
+
+            <div class="objeto" onclick="objeto4()">
+
+                <span class="icono">🩵</span>
+
+                Corazón
+
+            </div>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     PRUEBA 05
+========================= -->
+
+<section id="codigo" class="pantalla">
+
+    <div class="card">
+
+        <div class="emoji-grande">🔐</div>
+
+        <h2>PRUEBA 05</h2>
+
+        <h1>El código secreto</h1>
+
+        <div id="mensajeCodigo" class="mensaje-codigo"></div>
+
+        <div class="codigo">
+
+            <input
+                id="c1"
+                maxlength="1"
+                inputmode="numeric"
+                oninput="siguienteCodigo(this,'c2')"
+            >
+
+            <input
+                id="c2"
+                maxlength="1"
+                inputmode="numeric"
+                oninput="siguienteCodigo(this,'c3')"
+            >
+
+            <input
+                id="c3"
+                maxlength="1"
+                inputmode="numeric"
+                oninput="siguienteCodigo(this,'c4')"
+            >
+
+            <input
+                id="c4"
+                maxlength="1"
+                inputmode="numeric"
+            >
+
+        </div>
+
+        <button onclick="comprobarCodigo()">
+            Abrir candado
+        </button>
+
+        <br>
+
+        <button onclick="mostrar('sala')" class="secundario">
+            Volver a la sala
+        </button>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     NOTA
+========================= -->
+
+<section id="nota" class="pantalla">
+
+    <div class="card">
+
+        <div class="emoji-grande">📄</div>
+
+        <h2>PISTA ENCONTRADA</h2>
+
+        <div class="nota">
+
+            <h2>Una nota</h2>
+
+            <p>
+                Para abrir la siguiente puerta necesitás
+                recordar algo importante.
+            </p>
+
+            <p>
+                <strong>
+                    Dos cumpleaños esconden la combinación.
+                </strong>
+            </p>
+
+        </div>
+
+        <button onclick="volverSalaConPista()">
+            Volver a la sala
+        </button>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     OBJETO INCORRECTO
+========================= -->
+
+<section id="objetoNoEs" class="pantalla">
+
+    <div class="card">
+
+        <div class="emoji-grande">👀</div>
+
+        <h1>Por acá no es.</h1>
+
+        <p>
+            Segui buscando miamor.
+        </p>
+
+        <button onclick="mostrar('sala')">
+            Volver a la sala
+        </button>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     LABERINTO
+========================= -->
+
+<section id="laberintoPantalla" class="pantalla">
+
+    <div class="card">
+
+        <h2>🌀 PRUEBA 06</h2>
+
+        <h1>El laberinto</h1>
+
+        <p>
+            Encontrá la salida.
+        </p>
+
+        <p>
+            Llegá desde 🩵 hasta 🚪
+        </p>
+
+        <div id="laberinto" class="laberinto"></div>
+
+        <div class="controles">
+
+            <button onclick="moverJugador(0,-1)">⬆️</button>
+
+            <button onclick="moverJugador(-1,0)">⬅️</button>
+
+            <button onclick="moverJugador(0,1)">⬇️</button>
+
+            <button onclick="moverJugador(1,0)">➡️</button>
+
+        </div>
+
+        <p>
+            También podés usar las flechas del teclado.
+        </p>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     PRUEBA 07
+========================= -->
+
+<section id="prueba7" class="pantalla">
+
+    <div class="card">
+
+        <div class="emoji-grande">🧩</div>
+
+        <h2>PRUEBA 07</h2>
+
+        <h1>La fecha que casi fue</h1>
+
+        <p>
+            ¿Pensabas que te la iba a dejar facil mi reina jeje?
+        </p>
+
+        <p>
+            Llegaste hasta acá, pero todavía falta una última prueba.
+        </p>
+
+        <p>
+            Hay una fecha que <strong>casi</strong> se convierte
+            en una fecha importante para nosotras.
+        </p>
+
+        <p>
+            No es cuando nos conocimos.<br>
+            No es cuando empezamos a hablar.<br>
+            Y tampoco es cuando nos hicimos novias.
+        </p>
+
+        <div class="fecha">
+
+            <input
+                id="dia7"
+                maxlength="2"
+                placeholder="DD"
+                oninput="siguienteCampo(this,'mes7')"
+            >
+
+            <input
+                id="mes7"
+                maxlength="2"
+                placeholder="MM"
+                oninput="siguienteCampo(this,'año7')"
+            >
+
+            <input
+                id="año7"
+                class="año"
+                maxlength="4"
+                placeholder="AAAA"
+            >
+
+        </div>
+
+        <button onclick="comprobar7()">
+            Comprobar
+        </button>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     ROMPECABEZAS
+     ÚLTIMA PRUEBA
+========================= -->
+
+<section id="rompecabezas" class="pantalla">
+
+    <div class="card">
+
+        <div class="emoji-grande">
+            🧩
+        </div>
+
+        <h2>ÚLTIMA PRUEBA</h2>
+
+        <h1>El recuerdo escondido</h1>
+
+        <p>
+            Llegaste hasta la última prueba.
+        </p>
+
+        <p>
+            Ahora tenés que reconstruir este recuerdo.
+        </p>
+
+        <p>
+            <strong>
+                Mové las piezas hasta completar la foto.
+            </strong>
+        </p>
+
+        <div id="puzzle" class="puzzle"></div>
+
+        <div id="puzzleMensaje" class="puzzle-mensaje">
+
+            Tocá una pieza que esté al lado
+            del espacio vacío para moverla.
+
+        </div>
+
+    </div>
+
+</section>
+
+
+<!-- =========================
+     ACCESO DESBLOQUEADO
+========================= -->
+
+<section id="final" class="pantalla">
+
+    <div class="card">
+
+        <div class="emoji-grande">🎁</div>
+
+        <h1>ACCESO DESBLOQUEADO</h1>
+
+        <h2>MISIÓN COMPLETADA</h2>
+
+        <p>
+            Lograste abrir todas las puertas.
+        </p>
+
+       <p>
+    Feliz cumpleaños, mi reina hermosa. Hoy 20-10 es un día muy especial para mí,
+    ya que cumplís años, y quiero que este día también sea especial para vos
+    y que no lo veas como un día más.
+</p>
+
+<p>
+    Espero poder seguir dándote estos detalles, poder seguir festejando más
+    cumpleaños a tu lado y, a la vez, envejecer juntas JAJAJAJA.
+</p>
+
+<p>
+    Espero te guste este detalle. Sé que no es mucho, pero te lo hice con todo
+    el amor del mundo. Te amo, mi amor. ¡Feliz 21 años! 🩵
+</p>
+     
+        <button onclick="mostrar('historia')">
+            Ver nuestra historia 🩵
+        </button>
+
+    </div>
+
+</section>
+
+<!-- =========================
+     NUESTRA HISTORIA
+     FINAL DEL JUEGO
+========================= -->
+
+<section id="historia" class="pantalla">
+
+    <div class="card">
+
+        <div class="emoji-grande">🩵</div>
+
+        <h2>UNA PARTE DE NUESTRA HISTORIA</h2>
+
+        
+
+        <p>
+            Durante toda esta misión fuiste descubriendo
+            algunas partes de nuestra historia...
+        </p>
+
+        <p>
+            Ahora es momento de verlas todas juntas.
+        </p>
+
+
+        <div class="timeline">
+
+
+            <div class="evento">
+
+                <span class="fecha-timeline">
+                    04/02/2025
+                </span>
+
+                <strong>
+                    Nos conocimos
+                </strong>
+
+            </div>
+
+
+            <div class="evento">
+
+                <span class="fecha-timeline">
+                    09/02/2025
+                </span>
+
+                <strong>
+                    Empezamos a hablar
+                </strong>
+
+            </div>
+
+
+            <div class="evento">
+
+                <span class="fecha-timeline">
+                    19/03/2025
+                </span>
+
+                <strong>
+                    Mi primer cumpleaños con vos
+                </strong>
+
+            </div>
+
+
+            <div class="evento">
+
+                <span class="fecha-timeline">
+                    20/10/2025
+                </span>
+
+                <strong>
+                    Tu primer cumpleaños conmigo
+                </strong>
+
+            </div>
+
+
+            <div class="evento">
+
+                <span class="fecha-timeline">
+                    24/12/2025
+                </span>
+
+                <strong>
+                    Nuestra primera Navidad
+                </strong>
+
+            </div>
+
+
+            <div class="evento">
+
+                <span class="fecha-timeline">
+                    01/01/2026
+                </span>
+
+                <strong>
+                    Nuestro primer Año Nuevo
+                </strong>
+
+            </div>
+
+
+            <div class="evento">
+
+                <span class="fecha-timeline">
+                    14/02/2026
+                </span>
+
+                <strong>
+                    Nuestro primer San Valentín sin ser novias
+                </strong>
+
+            </div>
+
+
+            <div class="evento">
+
+                <span class="fecha-timeline">
+                    19/03/2026
+                </span>
+
+                <strong>
+                    Mi segundo cumpleaños con vos
+                </strong>
+
+            </div>
+
+
+            <div class="evento">
+
+                <span class="fecha-timeline">
+                    02/05/2026
+                </span>
+
+                <strong>
+                    Me preguntaste para ser tu novia pero cambiamos la fecha
+                </strong>
+
+            </div>
+
+
+            <div class="evento especial">
+
+                <span class="fecha-timeline">
+                    09/05/2026
+                </span>
+
+                <strong>
+                    Oficialmente nos hicimos novias 🩵
+                </strong>
+
+            </div>
+
+
+            <div class="evento">
+
+                <span class="fecha-timeline">
+                    20/10/2026
+                </span>
+
+                <strong>
+                    Tu segundo cumpleaños conmigo 🎂
+                </strong>
+
+            </div>
+
+
+        </div>
+
+
+        <div class="final-historia">
+
+            <div class="emoji-grande">
+                ✨
+            </div>
+
+            <p>
+                Y esta historia todavía no terminó, mi reina.
+                Faltan muchas más fiestas, cumpleaños y aniversarios por cumplir.
+                TE AMO PAMELA MATTOS.
+            </p>
+
+        </div>
+
+    </div>
+
+</section>
+
+
+
+<script>
+
+
+/* =========================
+   NAVEGACIÓN
+========================= */
+
+function ocultarTodo(){
+
+    document.querySelectorAll(".pantalla").forEach(function(pantalla){
+
+        pantalla.classList.remove("activa");
+
+    });
+
+}
+
+
+function mostrar(id){
+
+    ocultarTodo();
+
+    document.getElementById(id).classList.add("activa");
+
+
+    if(id === "rompecabezas"){
+
+        iniciarRompecabezas();
+
+    }
+
+}
+
+
+let preguntaAnterior = "prueba1";
+
+
+function mostrarError(pregunta){
+
+    preguntaAnterior = pregunta;
+
+    mostrar("error");
+
+}
+
+
+function volverPregunta(){
+
+    mostrar(preguntaAnterior);
+
+}
+
+
+function siguienteCampo(elemento,siguiente){
+
+    if(elemento.value.length >= elemento.maxLength){
+
+        document.getElementById(siguiente).focus();
+
+    }
+
+}
+
+
+/* =========================
+   PRUEBA 1
+========================= */
+
+function comprobar1(){
+
+    let dia =
+        document.getElementById("dia1").value;
+
+    let mes =
+        document.getElementById("mes1").value;
+
+    let año =
+        document.getElementById("año1").value;
+
+
+    if(
+        dia === "04" &&
+        mes === "02" &&
+        año === "2025"
+    ){
+
+        mostrar("prueba2");
+
+    }else{
+
+        mostrarError("prueba1");
+
+    }
+
+}
+
+
+/* =========================
+   PRUEBA 2
+========================= */
+
+function comprobar2(){
+
+    let dia =
+        document.getElementById("dia2").value;
+
+    let mes =
+        document.getElementById("mes2").value;
+
+    let año =
+        document.getElementById("año2").value;
+
+
+    if(
+        dia === "09" &&
+        mes === "02" &&
+        año === "2025"
+    ){
+
+        mostrar("prueba3");
+
+    }else{
+
+        mostrarError("prueba2");
+
+    }
+
+}
+
+
+/* =========================
+   PRUEBA 3
+========================= */
+
+function comprobar3(){
+
+    let dia =
+        document.getElementById("dia3").value;
+
+    let mes =
+        document.getElementById("mes3").value;
+
+    let año =
+        document.getElementById("año3").value;
+
+
+    if(
+        dia === "09" &&
+        mes === "05" &&
+        año === "2026"
+    ){
+
+        mostrar("sala");
+
+    }else{
+
+        mostrarError("prueba3");
+
+    }
+
+}
+
+
+/* =========================
+   PRUEBA 7
+========================= */
+
+function comprobar7(){
+
+    let dia =
+        document.getElementById("dia7").value;
+
+    let mes =
+        document.getElementById("mes7").value;
+
+    let año =
+        document.getElementById("año7").value;
+
+
+    if(
+        dia === "02" &&
+        mes === "05" &&
+        año === "2026"
+    ){
+
+        mostrar("rompecabezas");
+
+    }else{
+
+        mostrarError("prueba7");
+
+    }
+
+}
+
+
+/* =========================
+   SALA
+========================= */
+
+let pistaEncontrada = false;
+
+
+function objeto1(){
+
+    mostrar("codigo");
+
+    actualizarMensajeCodigo();
+
+}
+
+
+function objeto2(){
+
+    mostrar("nota");
+
+}
+
+
+function objeto3(){
+
+    mostrar("objetoNoEs");
+
+}
+
+
+function objeto4(){
+
+    mostrar("objetoNoEs");
+
+}
+
+
+function volverSalaConPista(){
+
+    pistaEncontrada = true;
+
+    mostrar("sala");
+
+}
+
+
+function actualizarMensajeCodigo(){
+
+    let mensaje =
+        document.getElementById("mensajeCodigo");
+
+
+    if(!pistaEncontrada){
+
+        mensaje.innerHTML =
+        "🔐 <strong>EL CANDADO ESTÁ BLOQUEADO</strong><br><br>" +
+        "Parece que todavía te falta descubrir algo...<br><br>" +
+        "<strong>La respuesta está escondida en algún lugar de esta habitación. Buscá la pista y quizás encuentres la forma de abrirlo.</strong> 🩵";
+
+    }else{
+
+        mensaje.innerHTML =
+        "🔐 <strong>PISTA ENCONTRADA</strong><br><br>" +
+        "Ahora sí podés intentar abrir el candado.";
+
+    }
+
+}
+
+
+/* =========================
+   CODIGO
+========================= */
+
+function comprobarCodigo(){
+
+    if(!pistaEncontrada){
+
+        actualizarMensajeCodigo();
+
+        return;
+
+    }
+
+
+    let codigo =
+        document.getElementById("c1").value +
+        document.getElementById("c2").value +
+        document.getElementById("c3").value +
+        document.getElementById("c4").value;
+
+
+    if(codigo === "1920"){
+
+        iniciarLaberinto();
+
+    }else{
+
+        mostrarError("codigo");
+
+    }
+
+}
+
+
+function siguienteCodigo(elemento,siguiente){
+
+    if(elemento.value.length >= 1){
+
+        document.getElementById(siguiente).focus();
+
+    }
+
+}
+
+
+/* =========================
+   LABERINTO
+========================= */
+
+const mapa = [
+
+[0,0,1,0,0,0,0,1,0,0,0,1,1,1,1],
+
+[1,0,1,0,1,1,0,1,0,1,0,1,0,0,0],
+
+[1,0,0,0,1,0,0,1,0,1,0,1,0,1,0],
+
+[1,1,1,0,1,0,1,1,0,1,0,0,0,1,0],
+
+[1,0,0,0,1,0,1,0,0,1,1,1,1,1,0],
+
+[1,0,1,1,1,0,1,0,1,0,0,0,0,0,0],
+
+[1,0,0,0,1,0,1,0,1,1,1,1,1,1,1],
+
+[1,1,1,0,1,0,1,0,0,0,0,0,0,0,1],
+
+[1,0,0,0,1,0,1,1,1,1,1,1,1,0,1],
+
+[1,0,1,1,1,0,0,0,0,0,0,0,1,0,1],
+
+[1,0,0,0,1,1,1,1,1,1,1,0,1,0,1],
+
+[1,1,1,0,0,0,0,0,0,0,1,0,1,0,1],
+
+[1,0,0,0,1,1,1,1,1,0,1,0,1,0,1],
+
+[1,0,1,1,1,0,0,0,0,0,1,0,0,0,1],
+
+[1,0,0,0,0,0,1,1,1,1,1,1,1,0,0]
+
+];
+
+
+let jugadorX = 0;
+
+let jugadorY = 0;
+
+let metaX = 14;
+
+let metaY = 14;
+
+
+function iniciarLaberinto(){
+
+    jugadorX = 0;
+
+    jugadorY = 0;
+
+    mostrar("laberintoPantalla");
+
+    dibujarLaberinto();
+
+}
+
+
+function dibujarLaberinto(){
+
+    let contenedor =
+        document.getElementById("laberinto");
+
+    contenedor.innerHTML = "";
+
+
+    for(let y = 0; y < mapa.length; y++){
+
+        for(let x = 0; x < mapa[y].length; x++){
+
+            let celda =
+                document.createElement("div");
+
+            celda.classList.add("celda");
+
+
+            if(mapa[y][x] === 1){
+
+                celda.classList.add("pared");
+
+            }else{
+
+                celda.classList.add("camino");
+
+
+                if(
+                    x === jugadorX &&
+                    y === jugadorY
+                ){
+
+                    celda.textContent = "🩵";
+
+                }
+
+
+                if(
+                    x === metaX &&
+                    y === metaY
+                ){
+
+                    celda.textContent = "🚪";
+
+                }
+
+            }
+
+
+            contenedor.appendChild(celda);
+
+        }
+
+    }
+
+}
+
+
+function moverJugador(dx,dy){
+
+    let nuevoX =
+        jugadorX + dx;
+
+    let nuevoY =
+        jugadorY + dy;
+
+
+    if(
+        nuevoX < 0 ||
+        nuevoX >= 15 ||
+        nuevoY < 0 ||
+        nuevoY >= 15
+    ){
+
+        return;
+
+    }
+
+
+    if(mapa[nuevoY][nuevoX] === 1){
+
+        return;
+
+    }
+
+
+    jugadorX = nuevoX;
+
+    jugadorY = nuevoY;
+
+
+    dibujarLaberinto();
+
+
+    if(
+        jugadorX === metaX &&
+        jugadorY === metaY
+    ){
+
+        setTimeout(function(){
+
+            mostrar("prueba7");
+
+        },400);
+
+    }
+
+}
+
+
+/* =========================
+   TECLADO
+========================= */
+
+document.addEventListener("keydown",function(event){
+
+    if(
+        !document
+        .getElementById("laberintoPantalla")
+        .classList
+        .contains("activa")
+    ){
+
+        return;
+
+    }
+
+
+    if(event.key === "ArrowUp"){
+
+        moverJugador(0,-1);
+
+    }
+
+
+    if(event.key === "ArrowDown"){
+
+        moverJugador(0,1);
+
+    }
+
+
+    if(event.key === "ArrowLeft"){
+
+        moverJugador(-1,0);
+
+    }
+
+
+    if(event.key === "ArrowRight"){
+
+        moverJugador(1,0);
+
+    }
+
+});
+
+
+/* =========================
+   ROMPECABEZAS 4x4
+========================= */
+
+let puzzleTablero = [];
+
+let espacioVacio = 15;
+
+let puzzleCompletado = false;
+
+
+function iniciarRompecabezas(){
+
+    puzzleCompletado = false;
+
+
+    puzzleTablero = [
+
+        0,1,2,3,
+
+        4,5,6,7,
+
+        8,9,10,11,
+
+        12,13,14,15
+
+    ];
+
+
+    espacioVacio = 15;
+
+
+    let movimientos = 180;
+
+    let anterior = -1;
+
+
+    for(
+        let i = 0;
+        i < movimientos;
+        i++
+    ){
+
+        let posibles =
+            obtenerMovimientosPosibles();
+
+
+        let filtrados =
+            posibles.filter(function(pos){
+
+                return pos !== anterior;
+
+            });
+
+
+        if(filtrados.length === 0){
+
+            filtrados = posibles;
+
+        }
+
+
+        let posicion =
+            filtrados[
+                Math.floor(
+                    Math.random() * filtrados.length
+                )
+            ];
+
+
+        anterior = espacioVacio;
+
+
+        intercambiarPieza(posicion);
+
+    }
+
+
+    let mensaje =
+        document.getElementById("puzzleMensaje");
+
+
+    mensaje.innerHTML =
+        "Tocá una pieza que esté al lado " +
+        "del espacio vacío para moverla.";
+
+
+    dibujarPuzzle();
+
+}
+
+
+function obtenerMovimientosPosibles(){
+
+    let movimientos = [];
+
+
+    let fila =
+        Math.floor(espacioVacio / 4);
+
+
+    let columna =
+        espacioVacio % 4;
+
+
+    if(fila > 0){
+
+        movimientos.push(
+            espacioVacio - 4
+        );
+
+    }
+
+
+    if(fila < 3){
+
+        movimientos.push(
+            espacioVacio + 4
+        );
+
+    }
+
+
+    if(columna > 0){
+
+        movimientos.push(
+            espacioVacio - 1
+        );
+
+    }
+
+
+    if(columna < 3){
+
+        movimientos.push(
+            espacioVacio + 1
+        );
+
+    }
+
+
+    return movimientos;
+
+}
+
+
+function intercambiarPieza(posicion){
+
+    let temporal =
+        puzzleTablero[posicion];
+
+
+    puzzleTablero[posicion] =
+        puzzleTablero[espacioVacio];
+
+
+    puzzleTablero[espacioVacio] =
+        temporal;
+
+
+    espacioVacio = posicion;
+
+}
+
+
+function dibujarPuzzle(){
+
+    let contenedor =
+        document.getElementById("puzzle");
+
+
+    contenedor.innerHTML = "";
+
+
+    for(
+        let posicion = 0;
+        posicion < 16;
+        posicion++
+    ){
+
+        let pieza =
+            document.createElement("div");
+
+
+        pieza.classList.add("pieza");
+
+
+        let numero =
+            puzzleTablero[posicion];
+
+
+        if(numero === 15){
+
+            pieza.classList.add("vacia");
+
+        }else{
+
+            let fila =
+                Math.floor(numero / 4);
+
+
+            let columna =
+                numero % 4;
+
+
+            let x =
+                columna * 33.333333;
+
+
+            let y =
+                fila * 33.333333;
+
+
+            pieza.style.backgroundPosition =
+                x + "% " + y + "%";
+
+
+            pieza.onclick = function(){
+
+                moverPieza(posicion);
+
+            };
+
+        }
+
+
+        contenedor.appendChild(pieza);
+
+    }
+
+}
+
+
+function moverPieza(posicion){
+
+    if(puzzleCompletado){
+
+        return;
+
+    }
+
+
+    let posibles =
+        obtenerMovimientosPosibles();
+
+
+    if(!posibles.includes(posicion)){
+
+        return;
+
+    }
+
+
+    intercambiarPieza(posicion);
+
+    dibujarPuzzle();
+
+    comprobarPuzzle();
+
+}
+
+
+function comprobarPuzzle(){
+
+    for(
+        let i = 0;
+        i < 16;
+        i++
+    ){
+
+        if(puzzleTablero[i] !== i){
+
+            return;
+
+        }
+
+    }
+
+
+    puzzleCompletado = true;
+
+
+    let mensaje =
+        document.getElementById("puzzleMensaje");
+
+
+    mensaje.innerHTML =
+        "🩵 <strong>LO LOGRASTE.</strong><br><br>" +
+        "El recuerdo volvió a estar completo.<br>" +
+        "Archivo desbloqueado.";
+
+
+    setTimeout(function(){
+
+        mostrar("final");
+
+    },1800);
+
+}
+
+</script>
+
+</body>
+</html>
